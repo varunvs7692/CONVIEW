@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conview - Profile</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: #e6ecf2;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        .profile-container {
+            max-width: 480px;
+            margin: 48px auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 16px rgba(33,35,84,0.10);
+            padding: 36px 32px 32px 32px;
+        }
+        .profile-avatar-large {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #212354;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 0 auto 18px auto;
+        }
+        .profile-username {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #212354;
+            margin-bottom: 8px;
+        }
+        .profile-status {
+            text-align: center;
+            color: #888;
+            margin-bottom: 18px;
+        }
+        .profile-bio-label {
+            font-weight: bold;
+            color: #212354;
+            margin-bottom: 4px;
+        }
+        .profile-bio {
+            background: #f5f8fa;
+            border-radius: 8px;
+            padding: 12px;
+            color: #222;
+            min-height: 40px;
+            margin-bottom: 18px;
+        }
+        .edit-profile-section {
+            margin-top: 20px;
+        }
+        .edit-profile-bio-input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            border: 1px solid #b3d7ff;
+        }
+        .save-profile-btn {
+            background: #212354;
+            color: #fff;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .save-profile-btn:hover {
+            background: #16183a;
+        }
+        .back-btn {
+            background: #fff;
+            color: #212354;
+            border: 1px solid #212354;
+            border-radius: 8px;
+            padding: 7px 16px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 18px;
+            transition: background 0.2s, color 0.2s;
+        }
+        .back-btn:hover {
+            background: #212354;
+            color: #fff;
+        }
+        .success-message {
+            color: #1a7f37;
+            background: #e6f4ea;
+            border: 1px solid #b7e1cd;
+            border-radius: 6px;
+            padding: 8px 12px;
+            margin-bottom: 16px;
+            display: none;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <button class="back-btn" onclick="window.location.href='home.html'">&larr; Back to Home</button>
+        <div class="profile-avatar-large" id="profile-avatar-large"></div>
+        <div class="profile-username" id="profile-username-large"></div>
+        <div class="profile-status" id="profile-status-large">Online</div>
+        <div class="profile-bio-label">Bio</div>
+        <div class="profile-bio" id="profile-bio-large">This user has not added a bio yet.</div>
+        <div class="profile-bio-label">First Name</div>
+        <div class="profile-bio" id="profile-firstname-large">-</div>
+        <div class="profile-bio-label">Last Name</div>
+        <div class="profile-bio" id="profile-lastname-large">-</div>
+        <div class="profile-bio-label">Date of Birth</div>
+        <div class="profile-bio" id="profile-dob-large">-</div>
+        <div class="profile-bio-label">Relation</div>
+        <div class="profile-bio" id="profile-relation-large">-</div>
+        <div class="profile-bio-label">Status</div>
+        <div class="profile-bio" id="profile-statusvalue-large">-</div>
+        <div class="success-message" id="success-message">Profile updated!</div>
+        <div class="edit-profile-section">
+            <h3>Edit Your Profile</h3>
+            <input type="text" id="edit-profile-bio" placeholder="Enter your bio..." class="edit-profile-bio-input">
+            <input type="text" id="edit-profile-firstname" placeholder="First Name" class="edit-profile-bio-input">
+            <input type="text" id="edit-profile-lastname" placeholder="Last Name" class="edit-profile-bio-input">
+            <input type="date" id="edit-profile-dob" placeholder="Date of Birth" class="edit-profile-bio-input">
+            <input type="text" id="edit-profile-relation" placeholder="Relation" class="edit-profile-bio-input">
+            <input type="text" id="edit-profile-statusvalue" placeholder="Status (Online/Offline)" class="edit-profile-bio-input">
+            <button id="save-profile-btn" class="save-profile-btn">Save</button>
+        </div>
+    </div>
+    <script>
+        // Demo: Replace with fetch('/users') for real backend integration
+        let registeredUsers = [
+            { username: 'Alice', online: true, bio: 'Love reading and music.', firstname: 'Alice', lastname: 'Smith', dob: '2000-01-01', relation: 'Single', statusvalue: 'Online' },
+            { username: 'Bob', online: false, bio: 'Aspiring developer.', firstname: 'Bob', lastname: 'Brown', dob: '1999-05-10', relation: 'Friend', statusvalue: 'Offline' },
+            { username: 'Notes Group', online: true, bio: 'Share your notes here!', firstname: '', lastname: '', dob: '', relation: '', statusvalue: '' }
+        ];
+
+        // Load from localStorage if available
+        const saved = localStorage.getItem('profileData');
+        if (saved) registeredUsers = JSON.parse(saved);
+
+        // Get current user, add if not present
+        function getCurrentUser() {
+            const username = localStorage.getItem('conview-username');
+            let user = registeredUsers.find(u => u.username === username);
+            if (!user && username) {
+                user = { username, online: true, bio: '', firstname: '', lastname: '', dob: '', relation: '', statusvalue: '' };
+                registeredUsers.push(user);
+            }
+            return user;
+        }
+
+        // Render profile info
+        function renderProfile() {
+            const user = getCurrentUser();
+            if (user) {
+                // Show first letter of user's first name, or username, or fallback to 'U'
+                let avatarText = user.firstname
+                    ? user.firstname[0].toUpperCase()
+                    : (user.username ? user.username[0].toUpperCase() : 'U');
+                document.getElementById('profile-avatar-large').textContent = avatarText;
+                // Show full name (first name + last name) instead of username
+                document.getElementById('profile-username-large').textContent =
+                    (user.firstname && user.lastname)
+                        ? user.firstname + ' ' + user.lastname
+                        : user.firstname || user.lastname || user.username;
+                document.getElementById('profile-status-large').textContent = user.online ? 'Online' : 'Offline';
+                document.getElementById('profile-bio-large').textContent = user.bio || 'This user has not added a bio yet.';
+                document.getElementById('profile-firstname-large').textContent = user.firstname || '-';
+                document.getElementById('profile-lastname-large').textContent = user.lastname || '-';
+                document.getElementById('profile-dob-large').textContent = user.dob || '-';
+                document.getElementById('profile-relation-large').textContent = user.relation || '-';
+                document.getElementById('profile-statusvalue-large').textContent = user.statusvalue || '-';
+                document.getElementById('edit-profile-bio').value = user.bio || '';
+                document.getElementById('edit-profile-firstname').value = user.firstname || '';
+                document.getElementById('edit-profile-lastname').value = user.lastname || '';
+                document.getElementById('edit-profile-dob').value = user.dob || '';
+                document.getElementById('edit-profile-relation').value = user.relation || '';
+                document.getElementById('edit-profile-statusvalue').value = user.statusvalue || '';
+            }
+        }
+
+        // Save profile changes and persist to localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            renderProfile();
+            document.getElementById('save-profile-btn').onclick = function() {
+                const user = getCurrentUser();
+                const bio = document.getElementById('edit-profile-bio').value;
+                const firstname = document.getElementById('edit-profile-firstname').value;
+                const lastname = document.getElementById('edit-profile-lastname').value;
+                const dob = document.getElementById('edit-profile-dob').value;
+                const relation = document.getElementById('edit-profile-relation').value;
+                const statusvalue = document.getElementById('edit-profile-statusvalue').value;
+                if (user) {
+                    user.bio = bio;
+                    user.firstname = firstname;
+                    user.lastname = lastname;
+                    user.dob = dob;
+                    user.relation = relation;
+                    user.statusvalue = statusvalue;
+                    document.getElementById('profile-bio-large').textContent = bio || 'This user has not added a bio yet.';
+                    document.getElementById('profile-firstname-large').textContent = firstname || '-';
+                    document.getElementById('profile-lastname-large').textContent = lastname || '-';
+                    document.getElementById('profile-dob-large').textContent = dob || '-';
+                    document.getElementById('profile-relation-large').textContent = relation || '-';
+                    document.getElementById('profile-statusvalue-large').textContent = statusvalue || '-';
+                    // Save to localStorage for persistence
+                    localStorage.setItem('profileData', JSON.stringify(registeredUsers));
+                    // Show success message
+                    const msg = document.getElementById('success-message');
+                    msg.style.display = 'block';
+                    setTimeout(() => { msg.style.display = 'none'; }, 2000);
+                }
+            };
+        });
+    </script>
+</body>
+</html>

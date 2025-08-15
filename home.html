@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conview Home</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: #e6ecf2;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        .conview-header {
+            background: #212354;
+            color: #fff;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            box-shadow: 0 2px 8px rgba(33,35,84,0.08);
+        }
+        .conview-header h1 {
+            margin: 0 32px;
+            font-size: 2rem;
+            letter-spacing: 2px;
+        }
+        .header-search {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            max-width: 400px;
+        }
+        .header-search input {
+            width: 100%;
+            padding: 8px 14px;
+            border-radius: 20px;
+            border: none;
+            font-size: 1rem;
+            margin-left: 16px;
+        }
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-right: 32px;
+        }
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #fff;
+            color: #212354;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border: 2px solid #212354;
+        }
+        .profile-name {
+            font-weight: bold;
+            color: #fff;
+            font-size: 1.05rem;
+        }
+        .logout-btn {
+            background: #fff;
+            color: #212354;
+            border: none;
+            border-radius: 8px;
+            padding: 7px 16px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 8px;
+            transition: background 0.2s, color 0.2s;
+        }
+        .logout-btn:hover {
+            background: #212354;
+            color: #fff;
+            border: 1px solid #fff;
+        }
+        .profile-btn-margin {
+            margin-left: 8px;
+        }
+        .main-content {
+            display: flex;
+            max-width: 1200px;
+            margin: 32px auto 0 auto;
+            gap: 32px;
+        }
+        .sidebar {
+            width: 260px;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 2px 12px rgba(33,35,84,0.06);
+            padding: 24px 0 24px 0;
+            height: fit-content;
+        }
+        .sidebar h2 {
+            font-size: 1.15rem;
+            color: #212354;
+            margin: 0 0 18px 32px;
+        }
+        .friends-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .friend-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 32px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background 0.15s;
+        }
+        .friend-item:hover, .friend-item.active {
+            background: #f0f3fa;
+        }
+        .friend-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #dbeafe;
+            color: #212354;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 12px;
+            font-size: 1.1rem;
+        }
+        .friend-name {
+            font-weight: 500;
+            color: #212354;
+        }
+        .feed {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        .post-box {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 2px 12px rgba(33,35,84,0.06);
+            padding: 20px 28px 16px 28px;
+            margin-bottom: 8px;
+        }
+        .post-box textarea {
+            width: 100%;
+            border-radius: 10px;
+            border: 1px solid #b3d7ff;
+            padding: 12px;
+            font-size: 1.05rem;
+            resize: none;
+            margin-bottom: 10px;
+        }
+        .post-btn {
+            background: #212354;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 22px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            float: right;
+        }
+        .post-btn:hover {
+            background: #16183a;
+        }
+        .posts-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .post {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 2px 12px rgba(33,35,84,0.06);
+            padding: 18px 28px;
+            margin-bottom: 8px;
+        }
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+        .post-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #212354;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        .post-author {
+            font-weight: bold;
+            color: #212354;
+        }
+        .post-time {
+            color: #888;
+            font-size: 0.92rem;
+            margin-left: 8px;
+        }
+        .post-content {
+            font-size: 1.08rem;
+            color: #222;
+            margin-top: 4px;
+        }
+        .clear-both {
+            clear: both;
+        }
+        .footer-text {
+            text-align: center;
+            color: #888;
+        }
+        .edit-profile-section {
+            display: none;
+            margin-top: 20px;
+        }
+        .edit-profile-bio-input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 8px;
+        }
+        .save-profile-btn {
+            background: #212354;
+            color: #fff;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .notification-bar {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            background: #212354;
+            color: #fff;
+            text-align: center;
+            padding: 12px 0;
+            z-index: 2000;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .user-profile-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(33,35,84,0.18);
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+        }
+        .user-profile-modal[style*="display: flex"] {
+            display: flex !important;
+        }
+        .user-profile-modal-content {
+            background: #fff;
+            border-radius: 14px;
+            padding: 32px 28px;
+            min-width: 320px;
+            max-width: 95vw;
+            box-shadow: 0 2px 24px rgba(33,35,84,0.18);
+            position: relative;
+        }
+        .close-profile-modal {
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: #212354;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="notification-bar" class="notification-bar">
+        <span id="notification-message"></span>
+    </div>
+    <header class="conview-header">
+        <h1>conview</h1>
+        <div class="header-search">
+            <input type="text" placeholder="Search Conview..." id="global-search" />
+        </div>
+        <div class="profile-section">
+            <div class="profile-avatar" id="profile-avatar">U</div>
+            <div class="profile-name" id="profile-username">Username</div>
+            <button class="logout-btn" id="logout-btn">Logout</button>
+            <button class="logout-btn profile-btn-margin" id="open-own-profile-btn">Profile</button>
+        </div>
+    </header>
+    <main>
+        <div class="main-content">
+            <aside class="sidebar">
+                <h2>Friends</h2>
+                <ul class="friends-list" id="friends-list">
+                    <!-- Friends will be rendered here -->
+                </ul>
+            </aside>
+            <section class="feed">
+                <div class="post-box">
+                    <textarea id="post-text" rows="2" placeholder="What's on your mind?"></textarea>
+                    <button class="post-btn" id="post-btn">Post</button>
+                    <div class="clear-both"></div>
+                </div>
+                <div class="posts-feed" id="posts-feed">
+                    <!-- Posts will be rendered here -->
+                </div>
+                <!-- User Profile Modal -->
+                <div id="user-profile-modal" class="user-profile-modal">
+                    <div class="user-profile-modal-content">
+                        <button id="close-profile-modal" class="close-profile-modal">&times;</button>
+                        <div class="user-profile-modal-header">
+                            <div id="modal-profile-avatar" class="modal-profile-avatar"></div>
+                            <div>
+                                <div id="modal-profile-name" class="modal-profile-name"></div>
+                                <div id="modal-profile-status" class="modal-profile-status">Online</div>
+                            </div>
+                        </div>
+                        <div id="modal-profile-bio" class="modal-profile-bio"></div>
+                        <!-- Edit Profile Section (only for current user) -->
+                        <div id="edit-profile-section" class="edit-profile-section">
+                            <h3>Edit Your Profile</h3>
+                            <input type="text" id="edit-profile-bio" placeholder="Enter your bio..." class="edit-profile-bio-input">
+                            <button id="save-profile-btn" class="save-profile-btn">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    <footer>
+        <p class="footer-text">&copy; 2025 Conview. All rights reserved.</p>
+    </footer>
+    <script>
+        // Demo: Replace with fetch('/users') for real backend integration
+        let registeredUsers = [
+            { username: 'Alice', online: true, bio: 'Love reading and music.' },
+            { username: 'Bob', online: false, bio: 'Aspiring developer.' },
+            { username: 'Notes Group', online: true, bio: 'Share your notes here!' }
+        ];
+
+        // Demo posts (replace with backend for real app)
+        let posts = [
+            { author: 'Alice', content: 'Hello Conview! Excited to join.', time: 'Just now' },
+            { author: 'Bob', content: 'Anyone has notes for today\'s class?', time: '2 min ago' }
+        ];
+
+        // Helper to get current user
+        function getCurrentUser() {
+            const username = localStorage.getItem('conview-username');
+            return registeredUsers.find(u => u.username === username);
+        }
+
+        // Notification bar function
+        function showNotification(message, timeout = 2500) {
+            const bar = document.getElementById('notification-bar');
+            const msg = document.getElementById('notification-message');
+            msg.textContent = message;
+            bar.style.display = 'block';
+            setTimeout(() => {
+                bar.style.display = 'none';
+            }, timeout);
+        }
+
+        // Render friends list with profile view
+        function renderFriendsList() {
+            const friendsList = document.getElementById('friends-list');
+            friendsList.innerHTML = '';
+            registeredUsers.forEach(user => {
+                const li = document.createElement('li');
+                li.className = 'friend-item';
+                li.innerHTML = `
+                    <div class="friend-avatar">${user.username[0].toUpperCase()}</div>
+                    <div class="friend-name">${user.username}</div>
+                `;
+                li.addEventListener('click', function() {
+                    // Show user profile modal
+                    document.getElementById('modal-profile-avatar').textContent = user.username[0].toUpperCase();
+                    document.getElementById('modal-profile-name').textContent = user.username;
+                    document.getElementById('modal-profile-status').textContent = user.online ? 'Online' : 'Offline';
+                    document.getElementById('modal-profile-bio').textContent = user.bio || 'This user has not added a bio yet.';
+                    document.getElementById('user-profile-modal').style.display = 'flex';
+
+                    // Show edit section only for current user
+                    const currentUser = localStorage.getItem('conview-username');
+                    if (currentUser === user.username) {
+                        document.getElementById('edit-profile-section').style.display = 'block';
+                        document.getElementById('edit-profile-bio').value = user.bio || '';
+                    } else {
+                        document.getElementById('edit-profile-section').style.display = 'none';
+                    }
+                });
+                friendsList.appendChild(li);
+            });
+        }
+
+        // Render posts feed
+        function renderPostsFeed() {
+            const postsFeed = document.getElementById('posts-feed');
+            postsFeed.innerHTML = '';
+            posts.slice().reverse().forEach(post => {
+                const div = document.createElement('div');
+                div.className = 'post';
+                div.innerHTML = `
+                    <div class="post-header">
+                        <div class="post-avatar">${post.author[0].toUpperCase()}</div>
+                        <div class="post-author">${post.author}</div>
+                        <div class="post-time">${post.time}</div>
+                    </div>
+                    <div class="post-content">${post.content}</div>
+                `;
+                postsFeed.appendChild(div);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('post-btn').addEventListener('click', function() {
+                const textarea = document.getElementById('post-text');
+                const content = textarea.value.trim();
+                if (content) {
+                    const username = localStorage.getItem('conview-username') || 'You';
+                    posts.push({
+                        author: username,
+                        content,
+                        time: 'Just now'
+                    });
+                    textarea.value = '';
+                    renderPostsFeed();
+                    showNotification('Post added!');
+                }
+            });
+
+            // Save profile changes
+            document.getElementById('save-profile-btn').onclick = function() {
+                const username = localStorage.getItem('conview-username');
+                const bio = document.getElementById('edit-profile-bio').value;
+                const user = registeredUsers.find(u => u.username === username);
+                if (user) {
+                    user.bio = bio;
+                    document.getElementById('modal-profile-bio').textContent = bio || 'This user has not added a bio yet.';
+                    showNotification('Profile updated!');
+                }
+            };
+
+            // Show real username and avatar from localStorage
+            const username = localStorage.getItem('conview-username');
+            if (username) {
+                document.getElementById('profile-username').textContent = username;
+                document.getElementById('profile-avatar').textContent = username[0].toUpperCase();
+            }
+            renderFriendsList();
+            renderPostsFeed();
+
+            document.getElementById('open-own-profile-btn').onclick = function () {
+    const username = localStorage.getItem('conview-username');
+
+    if (!username) {
+        alert('No user is logged in. Please log in again.');
+        return;
+    }
+
+    if (!Array.isArray(registeredUsers)) {
+        alert('User data is missing or corrupted. Please reload the page.');
+        return;
+    }
+
+    const user = registeredUsers.find(u => u.username === username);
+
+    if (!user) {
+        alert('User not found. Please log in again.');
+        return;
+    }
+
+    // Fill profile modal
+    document.getElementById('modal-profile-avatar').textContent = user.username.charAt(0).toUpperCase();
+    document.getElementById('modal-profile-name').textContent = user.username;
+    document.getElementById('modal-profile-status').textContent = user.online ? 'Online' : 'Offline';
+    document.getElementById('modal-profile-bio').textContent = user.bio?.trim() || 'This user has not added a bio yet.';
+
+    // Show modal and editable section
+    document.getElementById('user-profile-modal').style.display = 'flex';
+    document.getElementById('edit-profile-section').style.display = 'block';
+    document.getElementById('edit-profile-bio').value = user.bio || '';
+};
+
+
+            // Close profile modal
+            document.getElementById('close-profile-modal').onclick = function() {
+                document.getElementById('user-profile-modal').style.display = 'none';
+            };
+
+            // Logout functionality
+            document.getElementById('logout-btn').addEventListener('click', function () {
+                localStorage.removeItem('conview-username');
+                window.location.href = 'conview.html';
+            });
+        });
+    </script>
+</body>
+</html>

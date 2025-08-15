@@ -1,0 +1,80 @@
+# Conview Documentation
+
+## Overview
+
+**Conview** is a web-based platform designed for communication and content sharing, inspired by popular social and messaging apps such as WhatsApp, Facebook, Telegram, Twitter, Instagram, Snapchat, and university notes platforms. It brings together features from these platforms into a single, unified experience for users.
+
+---
+
+## Features
+
+- **User Profiles:**  
+  Users can view and edit their own profile, including name, bio, date of birth, relation, and status.
+
+- **Friends List:**  
+  Sidebar displays a list of friends. Clicking a friend opens their profile in a modal.
+
+- **Feed (Facebook/Twitter style):**  
+  Users can post updates and view posts from others in a central feed.
+
+- **Profile Modal:**  
+  Users can view other users' profiles in a modal window, and edit their own profile details.
+
+- **Persistent Profile Data:**  
+  Profile changes are saved in the browser's localStorage for demo purposes.
+
+- **Logout:**  
+  Users can log out, which clears their session.
+
+---
+
+## How It Works
+
+### Home Page (`home.html`)
+- **Header:**  
+  Contains the app name, search bar, user avatar, username, and buttons for logout and profile.
+- **Sidebar:**  
+  Shows a list of friends. Clicking a friend opens their profile.
+- **Feed:**  
+  Users can post messages and view the feed.
+- **Profile Modal:**  
+  Allows viewing and editing of user details.
+
+### Profile Page (`profile.html`)
+- **Profile Details:**  
+  Shows avatar, full name, status, bio, first name, last name, date of birth, relation, and status.
+- **Edit Section:**  
+  Users can update their details and save them. Changes are stored in localStorage.
+
+---
+
+## Technologies Used
+
+- **HTML, CSS, JavaScript** for frontend.
+- **localStorage** for demo data persistence.
+- **No backend/server** by default (for demo only).
+
+---
+
+## How to Use
+
+1. **Open `home.html` in your browser.**
+2. **Log in or use the default user.**
+3. **View and interact with the feed and friends list.**
+4. **Click "Profile" to view and edit your profile.**
+5. **Profile changes are saved in your browser (localStorage).**
+6. **Click "Logout" to end your session.
+
+---
+
+## Customization & Extension
+
+- To make data persistent across devices or users, connect to a backend (e.g., Node.js, Azure, etc.).
+- Add more features by extending the JavaScript and HTML as needed.
+- For Azure deployment, follow Azure best practices for web apps.
+
+---
+
+## About
+
+Conview is a unified communication and content-sharing platform, combining the best features of popular social and messaging apps for a seamless user experience.

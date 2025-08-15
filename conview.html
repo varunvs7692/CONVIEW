@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conview</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+</head>
+<body>
+    <header>
+        <h1>conview</h1>
+    </header>
+    <main>
+        <div class="login-container">
+            <form id="login-form" novalidate>
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Username" required aria-required="true" />
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Password" required aria-required="true" />
+                <div id="login-message" class="login-message" aria-live="polite"></div>
+                <button type="submit" id="login-button">Log in</button>
+                <button type="button" id="forgot-button">Forgot Password?</button>
+                <hr>
+                <button type="button" id="create_new_account-button" onclick="window.location.href='register.html'">
+                    Create New Account
+                </button>
+            </form>
+        </div>
+        <div id="content">
+            <section id="about-conview">
+                <p>CONVIEW is a comminivating website.</p>
+            </section>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2025 Conview. All rights reserved.</p>
+    </footer>
+</body>

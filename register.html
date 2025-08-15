@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Account - Conview</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="register.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>conview</h1>
+    </header>
+    <main>
+        <div class="login-container">
+            <form id="register-form" novalidate>
+                <label for="reg-username">Username</label>
+                <input type="text" id="reg-username" name="username" placeholder="Username" required aria-required="true" />
+                <label for="reg-password">Password</label>
+                <input type="password" id="reg-password" name="password" placeholder="Password" required aria-required="true" />
+                <div id="register-message" class="login-message" aria-live="polite"></div>
+                <button type="submit" id="register-button">Create Account</button>
+                <button type="button" onclick="window.location.href='conview.html'">Back to Login</button>
+            </form>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2025 Conview. All rights reserved.</p>
+    </footer>
+</body>
+</html>
