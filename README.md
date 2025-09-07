@@ -3,12 +3,12 @@
 
 1. **Clone or download** the project files to your local machine
 2. **No server required** - this is a client-side application
-3. **Open `conview.html`** in your web browser to start
+3. **Open `index.html`** in your web browser to start
 
 ## Usage
 
 ### First Time Setup
-1. Open `conview.html` in your browser
+1. Open `index.html` in your browser
 2. Register with a username (or use existing demo users: Alice, Bob)
 3. You'll be redirected to the home page
 
