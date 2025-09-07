@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 messageDiv.style.color = '#28a745';
                 messageDiv.textContent = data.message + ' Redirecting to login...';
                 setTimeout(() => {
-                    window.location.href = 'conview.html';
+                    window.location.href = 'index.html';
                 }, 1500);
             } else {
                 messageDiv.style.color = '#d32f2f';
