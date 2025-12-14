@@ -28,9 +28,14 @@ document.addEventListener('DOMContentLoaded', function () {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password })
         })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
+        .then(async res => {
+            let data;
+            try {
+                data = await res.json();
+            } catch {
+                throw new Error('Invalid server response');
+            }
+            if (res.ok && data.success) {
                 // Save username for profile display
                 localStorage.setItem('conview-username', username);
                 messageDiv.style.color = '#28a745';
@@ -41,14 +46,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 }, 1000);
             } else {
                 messageDiv.style.color = '#d32f2f';
-                messageDiv.textContent = data.message || 'Login failed.';
+                messageDiv.textContent = data && data.message ? data.message : 'Login failed.';
                 loginBtn.disabled = false;
                 loginBtn.textContent = 'Log in';
             }
         })
         .catch(() => {
             messageDiv.style.color = '#d32f2f';
-            messageDiv.textContent = 'Server error. Try again later.';
+            messageDiv.textContent = 'Unable to connect to server. Please try again later.';
             loginBtn.disabled = false;
             loginBtn.textContent = 'Log in';
         });
