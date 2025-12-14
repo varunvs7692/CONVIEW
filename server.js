@@ -4,16 +4,56 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const rateLimit = require('express-rate-limit');
 const { body, validationResult } = require('express-validator');
 const User = require('./models/User');
 const Post = require('./models/Post');
 
 const app = express();
 
+// Rate limiting configuration
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 5, // Limit each IP to 5 requests per windowMs
+    message: { success: false, message: 'Too many attempts, please try again later.' }
+});
+
+const apiLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limit each IP to 100 requests per windowMs
+    message: { success: false, message: 'Too many requests, please try again later.' }
+});
+
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static('.'));
+
+// Security middleware to prevent serving sensitive files
+app.use((req, res, next) => {
+    const allowedExtensions = ['.html', '.css', '.js', '.pdf', '.png', '.jpg', '.jpeg', '.gif', '.svg'];
+    const isDotfile = req.path.startsWith('/.');
+    const hasAllowedExtension = allowedExtensions.some(ext => req.path.endsWith(ext));
+    
+    // Block dotfiles and files without allowed extensions (when requesting static files)
+    if (isDotfile || (!hasAllowedExtension && !req.path.startsWith('/api/') && !req.path.includes('/register') && !req.path.includes('/login') && !req.path.includes('/logout'))) {
+        // Skip to next middleware for API routes, allow static files with safe extensions
+        if (req.path.startsWith('/api/') || req.path.includes('/register') || req.path.includes('/login') || req.path.includes('/logout')) {
+            return next();
+        }
+        // Check if requesting a static file with unsafe extension
+        const hasExtension = req.path.includes('.');
+        if (hasExtension && !hasAllowedExtension) {
+            return res.status(403).json({ success: false, message: 'Access denied' });
+        }
+    }
+    next();
+});
+
+// Serve static files (dotfiles are blocked by middleware above)
+app.use(express.static('.', {
+    dotfiles: 'deny',
+    index: false
+}));
 
 // Database connection
 const connectDB = async () => {
@@ -52,7 +92,7 @@ const validateProfile = [
 ];
 
 // Auth endpoints
-app.post('/register', validateRegistration, async (req, res) => {
+app.post('/register', authLimiter, validateRegistration, async (req, res) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -81,7 +121,7 @@ app.post('/register', validateRegistration, async (req, res) => {
     }
 });
 
-app.post('/login', validateLogin, async (req, res) => {
+app.post('/login', authLimiter, validateLogin, async (req, res) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -117,7 +157,7 @@ app.post('/login', validateLogin, async (req, res) => {
     }
 });
 
-app.post('/logout', async (req, res) => {
+app.post('/logout', apiLimiter, async (req, res) => {
     try {
         const { username } = req.body;
         if (username) {
@@ -135,7 +175,7 @@ app.post('/logout', async (req, res) => {
 });
 
 // User/Profile endpoints
-app.get('/api/users/:username', async (req, res) => {
+app.get('/api/users/:username', apiLimiter, async (req, res) => {
     try {
         const user = await User.findOne({ username: req.params.username });
         if (!user) {
@@ -148,7 +188,7 @@ app.get('/api/users/:username', async (req, res) => {
     }
 });
 
-app.put('/api/users/:username', validateProfile, async (req, res) => {
+app.put('/api/users/:username', apiLimiter, validateProfile, async (req, res) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -178,7 +218,7 @@ app.put('/api/users/:username', validateProfile, async (req, res) => {
     }
 });
 
-app.get('/api/users', async (req, res) => {
+app.get('/api/users', apiLimiter, async (req, res) => {
     try {
         const users = await User.find({}).select('-password');
         res.json({ success: true, users });
@@ -189,7 +229,7 @@ app.get('/api/users', async (req, res) => {
 });
 
 // Posts endpoints
-app.post('/api/posts', validatePost, async (req, res) => {
+app.post('/api/posts', apiLimiter, validatePost, async (req, res) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -217,7 +257,7 @@ app.post('/api/posts', validatePost, async (req, res) => {
     }
 });
 
-app.get('/api/posts', async (req, res) => {
+app.get('/api/posts', apiLimiter, async (req, res) => {
     try {
         const { username } = req.query;
         let query = {};
@@ -238,7 +278,7 @@ app.get('/api/posts', async (req, res) => {
     }
 });
 
-app.delete('/api/posts/:postId', async (req, res) => {
+app.delete('/api/posts/:postId', apiLimiter, async (req, res) => {
     try {
         const { username } = req.body;
         const post = await Post.findById(req.params.postId);
@@ -260,7 +300,7 @@ app.delete('/api/posts/:postId', async (req, res) => {
 });
 
 // Friends endpoints
-app.post('/api/users/:username/friends', async (req, res) => {
+app.post('/api/users/:username/friends', apiLimiter, async (req, res) => {
     try {
         const { friendUsername } = req.body;
         
@@ -283,7 +323,7 @@ app.post('/api/users/:username/friends', async (req, res) => {
     }
 });
 
-app.get('/api/users/:username/friends', async (req, res) => {
+app.get('/api/users/:username/friends', apiLimiter, async (req, res) => {
     try {
         const user = await User.findOne({ username: req.params.username })
             .populate('friends', 'username firstname lastname bio online statusvalue');
