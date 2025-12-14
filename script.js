@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
             let data;
             try {
                 data = await res.json();
-            } catch {
+            } catch (error) {
                 throw new Error('Invalid server response');
             }
             if (res.ok && data.success) {
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 loginBtn.textContent = 'Log in';
             }
         })
-        .catch(() => {
+        .catch((error) => {
             messageDiv.style.color = '#d32f2f';
             messageDiv.textContent = 'Unable to connect to server. Please try again later.';
             loginBtn.disabled = false;
