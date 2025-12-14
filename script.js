@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const password = passwordInput.value.trim();
 
         // Use fetch to POST to backend for real login
-        fetch('http://localhost:3000/login', {
+        fetch('/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password })
